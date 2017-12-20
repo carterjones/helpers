@@ -25,6 +25,7 @@ func CsvInt64s(name string) []int64 {
 	for _, s := range ss {
 		v, err := strconv.ParseInt(s, 10, 64)
 		if err != nil {
+			log.Println("error while parsing", name)
 			log.Panic(err)
 		}
 		ints = append(ints, v)
@@ -37,6 +38,7 @@ func CsvInt64s(name string) []int64 {
 func Float64(name string) float64 {
 	v, err := strconv.ParseFloat(os.Getenv(name), 64)
 	if err != nil {
+		log.Println("error while parsing", name)
 		log.Panic(err)
 	}
 	return v
@@ -46,6 +48,7 @@ func Float64(name string) float64 {
 func Int64(name string) int64 {
 	v, err := strconv.ParseInt(os.Getenv(name), 10, 64)
 	if err != nil {
+		log.Println("error while parsing", name)
 		log.Panic(err)
 	}
 	return v
@@ -56,6 +59,7 @@ func Int64(name string) int64 {
 func Duration(name string) time.Duration {
 	v, err := time.ParseDuration(os.Getenv(name))
 	if err != nil {
+		log.Println("error while parsing", name)
 		log.Panic(err)
 	}
 	return v
