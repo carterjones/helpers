@@ -6,12 +6,27 @@ import (
 	"log"
 	"os"
 	"runtime"
+	"strings"
 )
+
+func traceEnabled() bool {
+	v := os.Getenv("TRACE")
+	return strings.ToLower(v) == "true"
+}
+
+func debugEnabled() bool {
+	v := os.Getenv("DEBUG")
+	return strings.ToLower(v) == "true"
+}
 
 // Line returns the function name and line number wherever Line() is
 // called. This is most useful when creating a trail of call executions across
 // multiple goroutines.
 func Line() {
+	if !traceEnabled() {
+		return
+	}
+
 	pc := make([]uintptr, 15)
 	n := runtime.Callers(2, pc)
 	frames := runtime.CallersFrames(pc[:n])
@@ -23,6 +38,10 @@ func Line() {
 // the supplied error message. This is most useful when creating a trail of
 // errors across multiple goroutines.
 func Error(err error) {
+	if !traceEnabled() {
+		return
+	}
+
 	pc := make([]uintptr, 15)
 	n := runtime.Callers(2, pc)
 	frames := runtime.CallersFrames(pc[:n])
@@ -33,8 +52,7 @@ func Error(err error) {
 // DebugLine is the same as Line(), except that it only prints out information
 // when the DEBUG environment variable is set to "true".
 func DebugLine() {
-	debug := os.Getenv("DEBUG")
-	if debug != "true" {
+	if !debugEnabled() {
 		return
 	}
 
@@ -48,8 +66,7 @@ func DebugLine() {
 // DebugMessage prints the supplied message only when the DEBUG environment
 // variable is set to "true".
 func DebugMessage(msg string, v ...interface{}) {
-	debug := os.Getenv("DEBUG")
-	if debug != "true" {
+	if !debugEnabled() {
 		return
 	}
 
